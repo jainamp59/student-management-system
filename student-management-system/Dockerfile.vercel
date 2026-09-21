@@ -1,0 +1,11 @@
+FROM dunglas/frankenphp:php8.3-bookworm
+
+WORKDIR /app
+COPY . /app
+
+RUN docker-php-ext-install pdo_mysql
+
+ENV SERVER_NAME=:80
+ENV FRANKENPHP_CONFIG="worker ./public/index.html"
+
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduManage — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">E</div>
+      <div><strong>EduManage</strong><span>Admin Panel</span></div>
+    </div>
+
+    <nav>
+      <div class="nav-label">MAIN</div>
+      <a class="nav-item active" href="#dashboard" data-page="dashboard">⌂ <span>Dashboard</span></a>
+      <a class="nav-item" href="#students" data-page="students">♙ <span>Students</span></a>
+      <a class="nav-item" href="#courses" data-page="courses">▦ <span>Courses</span></a>
+      <a class="nav-item" href="#attendance" data-page="attendance">✓ <span>Attendance</span></a>
+      <a class="nav-item" href="#fees" data-page="fees">₹ <span>Fees</span></a>
+      <a class="nav-item" href="#results" data-page="results">★ <span>Results</span></a>
+
+      <div class="nav-label">SYSTEM</div>
+      <a class="nav-item" href="#reports" data-page="reports">▤ <span>Reports</span></a>
+      <a class="nav-item" href="#settings" data-page="settings">⚙ <span>Settings</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="mini-user"><div class="avatar">A</div><div><strong>Administrator</strong><span>Super Admin</span></div></div>
+      <button id="logoutBtn" class="logout-btn">↪ Logout</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="mobile-menu" id="menuBtn">☰</button>
+      <div>
+        <div class="eyebrow">STUDENT MANAGEMENT SYSTEM</div>
+        <h2 id="pageTitle">Dashboard</h2>
+      </div>
+      <div class="topbar-actions">
+        <div class="search-box"><span>⌕</span><input id="globalSearch" placeholder="Search students..."></div>
+        <button class="icon-btn">🔔<i></i></button>
+        <div class="avatar">A</div>
+      </div>
+    </header>
+
+    <section id="dashboard" class="page active">
+      <div class="welcome-row">
+        <div><h1>Good morning, Admin 👋</h1><p>Here’s what’s happening with your students today.</p></div>
+        <button class="btn btn-primary" onclick="openStudentModal()">＋ Add Student</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon purple">♙</div><div><span>Total Students</span><strong id="totalStudents">0</strong><small class="positive">↑ 8.2% this month</small></div></div>
+        <div class="stat-card"><div class="stat-icon green">✓</div><div><span>Attendance</span><strong id="attendanceRate">0%</strong><small class="positive">↑ 2.4% this week</small></div></div>
+        <div class="stat-card"><div class="stat-icon orange">₹</div><div><span>Fees Collected</span><strong id="feesCollected">₹0</strong><small>Current academic year</small></div></div>
+        <div class="stat-card"><div class="stat-icon blue">▦</div><div><span>Active Courses</span><strong id="totalCourses">0</strong><small>Across all departments</small></div></div>
+      </div>
+
+      <div class="content-grid">
+        <div class="panel chart-panel">
+          <div class="panel-head"><div><h3>Student Enrollment</h3><p>New admissions over the last 6 months</p></div><select><option>Last 6 months</option></select></div>
+          <div class="chart-wrap"><canvas id="enrollmentChart"></canvas></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div><h3>Quick Overview</h3><p>Current academic snapshot</p></div></div>
+          <div class="progress-item"><div><span>Active Students</span><strong id="activePercent">0%</strong></div><div class="progress"><i id="activeBar"></i></div></div>
+          <div class="progress-item"><div><span>Fee Collection</span><strong id="feePercent">0%</strong></div><div class="progress"><i id="feeBar"></i></div></div>
+          <div class="progress-item"><div><span>Attendance</span><strong id="attendancePercent">0%</strong></div><div class="progress"><i id="attendanceBar"></i></div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><div><h3>Recent Students</h3><p>Latest student registrations</p></div><a href="#students" class="text-link">View all →</a></div>
+        <div class="table-wrap"><table><thead><tr><th>Student</th><th>ID</th><th>Course</th><th>Phone</th><th>Status</th><th>Action</th></tr></thead><tbody id="recentStudents"></tbody></table></div>
+      </div>
+    </section>
+
+    <section id="students" class="page">
+      <div class="section-head"><div><h1>Students</h1><p>Manage all registered students.</p></div><button class="btn btn-primary" onclick="openStudentModal()">＋ Add Student</button></div>
+      <div class="panel filters"><div class="search-box wide"><span>⌕</span><input id="studentSearch" placeholder="Search by name, ID or phone..."></div><select id="statusFilter"><option value="">All statuses</option><option>Active</option><option>Inactive</option></select><select><option>All courses</option></select></div>
+      <div class="panel"><div class="table-wrap"><table><thead><tr><th>Student</th><th>Student ID</th><th>Course</th><th>Contact</th><th>Admission Date</th><th>Status</th><th>Actions</th></tr></thead><tbody id="studentsTable"></tbody></table></div></div>
+    </section>
+
+    <section id="courses" class="page">
+      <div class="section-head"><div><h1>Courses</h1><p>Academic programs offered by the institution.</p></div><button class="btn btn-primary" onclick="showToast('Course form can be connected to the PHP CRUD API.')">＋ Add Course</button></div>
+      <div class="course-grid">
+        <div class="course-card"><div class="course-icon">💻</div><h3>Bachelor of Computer Applications</h3><span>BCA • 3 Years</span><div class="course-bottom"><strong>86 Students</strong><em>₹45,000 / year</em></div></div>
+        <div class="course-card"><div class="course-icon">📊</div><h3>Bachelor of Business Administration</h3><span>BBA • 3 Years</span><div class="course-bottom"><strong>64 Students</strong><em>₹42,000 / year</em></div></div>
+        <div class="course-card"><div class="course-icon">🎨</div><h3>Bachelor of Design</h3><span>B.Des • 4 Years</span><div class="course-bottom"><strong>38 Students</strong><em>₹55,000 / year</em></div></div>
+        <div class="course-card"><div class="course-icon">🔬</div><h3>Bachelor of Science</h3><span>B.Sc • 3 Years</span><div class="course-bottom"><strong>57 Students</strong><em>₹40,000 / year</em></div></div>
+      </div>
+    </section>
+
+    <section id="attendance" class="page">
+      <div class="section-head"><div><h1>Attendance</h1><p>Monitor student attendance and daily participation.</p></div><button class="btn btn-primary" onclick="showToast('Attendance module is ready for API integration.')">＋ Mark Attendance</button></div>
+      <div class="stats-grid small-stats"><div class="stat-card"><div class="stat-icon green">✓</div><div><span>Present Today</span><strong>218</strong></div></div><div class="stat-card"><div class="stat-icon red">×</div><div><span>Absent Today</span><strong>19</strong></div></div><div class="stat-card"><div class="stat-icon orange">◷</div><div><span>Late</span><strong>8</strong></div></div></div>
+      <div class="panel"><div class="empty-state"><div>✓</div><h3>Attendance dashboard</h3><p>Use the PHP API structure in <code>api/attendance.php</code> to connect daily attendance records.</p></div></div>
+    </section>
+
+    <section id="fees" class="page">
+      <div class="section-head"><div><h1>Fees</h1><p>Track collections, pending balances and payment status.</p></div><button class="btn btn-primary" onclick="showToast('Fee entry module can be connected to the PHP CRUD API.')">＋ Record Payment</button></div>
+      <div class="stats-grid small-stats"><div class="stat-card"><div class="stat-icon green">₹</div><div><span>Collected</span><strong>₹8.42L</strong></div></div><div class="stat-card"><div class="stat-icon orange">◷</div><div><span>Pending</span><strong>₹1.86L</strong></div></div><div class="stat-card"><div class="stat-icon purple">%</div><div><span>Collection Rate</span><strong>81.9%</strong></div></div></div>
+      <div class="panel"><div class="empty-state"><div>₹</div><h3>Fee management</h3><p>Use the MySQL schema to store fee payments and build student-wise fee ledgers.</p></div></div>
+    </section>
+
+    <section id="results" class="page"><div class="section-head"><div><h1>Results</h1><p>Manage academic marks, grades and performance.</p></div></div><div class="panel"><div class="empty-state"><div>★</div><h3>Results management</h3><p>Add subjects and marks through the PHP/MySQL backend when you extend the project.</p></div></div></section>
+    <section id="reports" class="page"><div class="section-head"><div><h1>Reports</h1><p>Generate student, attendance and fee reports.</p></div><button class="btn btn-primary" onclick="window.print()">🖨 Print Report</button></div><div class="panel"><div class="report-list"><div><strong>Student Directory</strong><span>Complete student database</span><button onclick="showToast('Student directory ready to print.')">Print</button></div><div><strong>Attendance Summary</strong><span>Monthly attendance report</span><button onclick="showToast('Attendance report ready.')">Print</button></div><div><strong>Fee Collection</strong><span>Collected and pending fees</span><button onclick="showToast('Fee report ready.')">Print</button></div></div></div></section>
+    <section id="settings" class="page"><div class="section-head"><div><h1>Settings</h1><p>System preferences and administrator settings.</p></div></div><div class="panel settings-card"><h3>System Information</h3><p><strong>Application:</strong> EduManage Student Management System</p><p><strong>Frontend:</strong> HTML, CSS, JavaScript</p><p><strong>Backend:</strong> PHP 8+</p><p><strong>Database:</strong> MySQL</p></div></section>
+  </main>
+
+  <div class="modal-backdrop" id="studentModal">
+    <div class="modal">
+      <div class="modal-head"><div><h2 id="modalTitle">Add Student</h2><p>Enter the student's details below.</p></div><button class="close-btn" onclick="closeStudentModal()">×</button></div>
+      <form id="studentForm" class="form-grid">
+        <input type="hidden" id="studentDbId">
+        <div><label>First Name *</label><input id="firstName" required></div>
+        <div><label>Last Name *</label><input id="lastName" required></div>
+        <div><label>Email</label><input id="studentEmail" type="email"></div>
+        <div><label>Phone</label><input id="studentPhone"></div>
+        <div><label>Gender</label><select id="gender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+        <div><label>Date of Birth</label><input id="dob" type="date"></div>
+        <div><label>Course</label><select id="course"><option>BCA</option><option>BBA</option><option>B.Des</option><option>B.Sc</option></select></div>
+        <div><label>Status</label><select id="studentStatus"><option>Active</option><option>Inactive</option></select></div>
+        <div class="full"><label>Address</label><textarea id="address" rows="3"></textarea></div>
+        <div class="full modal-actions"><button type="button" class="btn btn-light" onclick="closeStudentModal()">Cancel</button><button class="btn btn-primary" type="submit">Save Student</button></div>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

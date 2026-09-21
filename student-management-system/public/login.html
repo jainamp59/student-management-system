@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduManage — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="login-page">
+  <div class="login-shell">
+    <div class="login-brand">
+      <div class="brand-mark">E</div>
+      <div>
+        <strong>EduManage</strong>
+        <span>Student Management System</span>
+      </div>
+    </div>
+
+    <div class="login-card">
+      <div class="login-icon">🎓</div>
+      <h1>Welcome back</h1>
+      <p>Sign in to manage your students, attendance and fees.</p>
+
+      <form id="loginForm">
+        <label>Email</label>
+        <input id="email" type="email" value="admin@example.com" required>
+
+        <label>Password</label>
+        <div class="password-wrap">
+          <input id="password" type="password" value="admin123" required>
+          <button type="button" id="togglePassword">Show</button>
+        </div>
+
+        <button class="btn btn-primary btn-full" type="submit">Sign In</button>
+        <div id="loginMessage" class="form-message"></div>
+      </form>
+
+      <div class="demo-note">
+        <strong>Demo account</strong><br>
+        admin@example.com / admin123
+      </div>
+    </div>
+
+    <small class="login-footer">Internship Project • Student Management System</small>
+  </div>
+  <script src="assets/app.js"></script>
+</body>
+</html>
